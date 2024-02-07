@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title> Flash Hasher </title>
+<style>
+body {
+  font-family: sans-serif;
+  margin: 30px;
+  color: #444;
+  background-color: #f1f5f8;
+}
+
+h1 {
+  text-align: center;
+  font-size: 3rem;
+  font-weight: bold;
+  margin-bottom: 15px;
+  color: #2980b9;
+}
+
+#inputText {
+  width: 100%;
+  padding: 20px;
+  font-size: 20px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  background-color: #fff;
+}
+
+#hashOutput {
+  width: 100%;
+  padding: 20px;
+  font-size: 20px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  background-color: #f7f9fa;
+  font-weight: bold;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+button {
+  display: block;
+  width: 100%;
+  padding: 20px;
+  font-size: 20px;
+  border: none;
+  border-radius: 4px;
+  background-color: #2980b9;
+  color: #fff;
+  cursor: pointer;
+  margin-top: 15px;
+}
+
+button:hover {
+  background-color: #3399cc;
+}
+
+#copyButton {
+  background-color: #1ab394;
+}
+
+#copyButton:hover {
+  background-color: #20c997;
+}
+</style>
+</head>
+<body>
+<h1> Flash Hasher </h1>
+<input type="text" id="inputText" placeholder="Type your secret..." onkeyup="generateHash()">
+<br>
+<div id="hashContainer">
+  <label for="hashOutput">SHA-256 Hash:</label>
+  <input type="text" id="hashOutput" readonly>
+  <button id="copyButton" onclick="copyHash()">Copy Hash</button>
+</div>
+
+<script>
+function generateHash() {
+  const text = document.getElementById("inputText").value;
+  crypto.subtle.digest("SHA-256", new TextEncoder().encode(text))
+    .then(hashedValue => {
+      const hashArray = Array.from(new Uint8Array(hashedValue));
+      const hashHex = hashArray.map(b => b.toString(16).padStart(2, "0")).join("");
+      document.getElementById("hashOutput").value = hashHex;
+    });
+}
+
+function copyHash() {
+  const hash = document.getElementById("hashOutput").value;
+  navigator.clipboard.writeText(hash)
+    .then(() => alert("Hash copied! ⚡️"))
+    .catch(err => alert("Oops, couldn't copy hash: " + err));
+}
+</script>
+</body>
+</html>
